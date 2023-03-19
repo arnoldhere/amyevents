@@ -12,6 +12,7 @@ try {
         $password = $_POST['password'];
         $_COOKIE = $email;
         $role = $_POST['role'];
+        echo $role;
         if ($role == "user") {
             $query = "SELECT * FROM `user` WHERE email = :email AND password = :password";
             $prepare = $conn->prepare($query);
@@ -29,11 +30,13 @@ try {
                     $_SESSION['email'] = $email;
                     $_SESSION['id'] = $user['id'];
                 }
-                echo "<script>window.location.replace('use_home.php');</script>";
+                // echo "<script>window.location.replace('use_home.php');</script>";
+                header("location:use_home.php");
             } else {
                 echo "<script>alert('Invalid username or password');</script>";
             }
-        } else if ($role == "admin") {
+        } else {
+
             $query = "SELECT * FROM `admintbl` WHERE email = :email AND password = :password";
             $data = [
                 ':email' => $email,
@@ -48,10 +51,9 @@ try {
                 echo "<script>window.location.replace('dashboard.php');</script>";
             }
         }
-        else{
-            echo "<script>alert('Please select role...!');</script>";
-            echo "<script>window.location.href = 'index.php';</script>";
-        }
+    } else {
+        echo "<script>alert('Please select role...!');</script>";
+        echo "<script>window.location.href = 'index.php';</script>";
     }
 } catch (PDOException $e) {
     echo "<script>'error in database connection </script>" . $e->getMessage();
